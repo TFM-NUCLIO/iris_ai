@@ -1,6 +1,6 @@
 SELECT 
 	aih.CO_CNES CNES, 
-	aih.dt_cmpt MES_ANO,
+	aih.dt_cmpt COMPETENCIA,
 	aih.NO_FANTASIA ESTABELECIMENTO, 
 	aih.NO_RAZAO_SOCIAL RAZAO_SOCIAL,
 	aih.sg_uf UF, 
@@ -14,7 +14,7 @@ FROM TB_ESPELHO_AIH AS aih
 WHERE 	aih.st_situacao = 'OK' AND aih.dt_cmpt>'200912'
 GROUP BY 
 	CNES, 
-	MES_ANO,
+	COMPETENCIA,
 	ESTABELECIMENTO,
 	RAZAO_SOCIAL,
 	UF,

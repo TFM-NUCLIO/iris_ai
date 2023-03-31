@@ -129,3 +129,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+data raw/SIA_procedimentos.csv
+*.csv

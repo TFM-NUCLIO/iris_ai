@@ -1,0 +1,6 @@
+# Parâmetros e hiperparâmetros do modelo
+ENCODING_DIM = 64
+LEARNING_RATE = 0.001
+EPOCHS = 100
+BATCH_SIZE = 128
+THRESHOLD_QUANTILE = 0.9
