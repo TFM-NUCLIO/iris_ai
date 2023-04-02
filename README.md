@@ -1,2 +1,2 @@
 # iris
-Projeto final do mastar em data science da NUCLIO Digital School
+Projeto final do master em data science da NUCLIO Digital School
