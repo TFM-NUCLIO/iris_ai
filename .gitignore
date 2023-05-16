@@ -131,3 +131,25 @@ dmypy.json
 .pyre/
 data raw/SIA_procedimentos.csv
 *.csv
+data/demografico/pop_2010_2022.xlsx
+data/procedimentos_cnes_iris.xlsx
+data/df_proc_mun.xlsx
+data/df_proc_cnes.xlsx
+.gitignore
+data/df_desv_med_n_proc_cnes.xlsx
+.gitignore
+data/df_desv_med_n_proc_mun.xlsx
+data/procedimentos_mun_iris.xlsx
+data/dfpo1/cabecalho.sav
+data/dfpo1/df_desv_med_n_proc_cnes.xlsx
+data/dfpo1/df_desv_med_n_proc_mun.xlsx
+data/dfpo1/df_pop.pkl
+data/dfpo1/df_proc_cnes.pkl
+data/dfpo1/df_proc_cnes.xlsx
+data/dfpo1/df_proc_mun.pkl
+data/dfpo1/df_proc_mun.xlsx
+data/dfpo1/m_desvios_med_n_cnes.pkl
+data/dfpo1/m_desvios_med_n_mun.pkl
+data/dfpo1/pop_2010_2022.xlsx
+data/dfpo1/procedimentos_cnes_iris.xlsx
+data/dfpo1/procedimentos_mun_iris.xlsx
