@@ -153,3 +153,5 @@ data/dfpo1/m_desvios_med_n_mun.pkl
 data/dfpo1/pop_2010_2022.xlsx
 data/dfpo1/procedimentos_cnes_iris.xlsx
 data/dfpo1/procedimentos_mun_iris.xlsx
+*.xlsx
+*pkl
