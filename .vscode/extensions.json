@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "github.remotehub"
+        "github.remotehub",
+        "ms-python.python"
     ]
 }
