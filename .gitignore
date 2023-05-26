@@ -170,3 +170,8 @@ IrisAutoencoder_Pytorch/train_data/df_X2.pkl
 IrisAutoencoder_Pytorch/train_data/df_X3.pkl
 IrisAutoencoder_Pytorch/train_data/X3D.pkl
 data/dfpo1/df_proc_mun_por_10k.pkl
+data/rjpo1/SIA_RJPO1/SIA_RJPO1.pdm
+data/rjpo1/SIA_RJPO1/SIA_RJPO1.pdm
+data/rjpo1/SIH_AIH_RJPO1/SIH_AIH_RJPO1.pdm
+data/rjpo1/SIA_RJPO1/SIA_RJPO1.pdm
+data/rjpo1/SIH_AIH_RJPO1/SIH_AIH_RJPO1.pdm
