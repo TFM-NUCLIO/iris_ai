@@ -2,14 +2,16 @@ import torch
 from torch import nn
 
 class LSTMAutoencoder(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers):
+    def __init__(self, input_dim, hidden_dim, num_layers, isCuda):
         super(LSTMAutoencoder, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
+        self.isCuda = isCuda
 
-        self.encoder = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
-        self.decoder = nn.LSTM(hidden_dim, input_dim, num_layers, batch_first=True)
+        self.encoder = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True).cuda() if self.isCuda else nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.decoder = nn.LSTM(hidden_dim, input_dim, num_layers, batch_first=True).cuda() if self.isCuda else nn.LSTM(hidden_dim, input_dim, num_layers, batch_first=True)
+
 
     def forward(self, x):
         _, (hidden, _) = self.encoder(x)
