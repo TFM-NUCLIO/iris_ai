@@ -15,7 +15,9 @@ def main():
     df = pd.read_pickle(config.DATAPATH)
 
     def get_sorted_unique_procedures(df):
-        return sorted(df['codigo_procedimento'].unique())
+        exploded = df.explode('codigo_procedimento')  # Expandir listas em várias linhas
+        unique_procedures = exploded['codigo_procedimento'].unique()
+        return sorted(unique_procedures)
 
     # Lista de todos os códigos de procedimento
     procedure_codes = get_sorted_unique_procedures(df)
