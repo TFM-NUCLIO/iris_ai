@@ -12,7 +12,6 @@ class LSTMAutoencoder(nn.Module):
         self.encoder = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True).cuda() if self.isCuda else nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
         self.decoder = nn.LSTM(hidden_dim, input_dim, num_layers, batch_first=True).cuda() if self.isCuda else nn.LSTM(hidden_dim, input_dim, num_layers, batch_first=True)
 
-
     def forward(self, x):
         _, (hidden, _) = self.encoder(x)
         x, _ = self.decoder(hidden.repeat(x.size(1), 1, 1))

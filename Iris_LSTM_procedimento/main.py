@@ -2,18 +2,10 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 from dataset import ProcedureDataset
 from model import LSTMAutoencoder
-from config import *
-
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-def get_sorted_unique_procedures(df):
-    return sorted(df['codigo_procedimento'].unique())
-
+from config import Config
 
 def main():
     # Configurações iniciais
@@ -21,6 +13,9 @@ def main():
 
     # Carregando o dataframe
     df = pd.read_pickle(config.DATAPATH)
+
+    def get_sorted_unique_procedures(df):
+        return sorted(df['codigo_procedimento'].unique())
 
     # Lista de todos os códigos de procedimento
     procedure_codes = get_sorted_unique_procedures(df)
@@ -33,7 +28,21 @@ def main():
         dataset = ProcedureDataset(df, config.WINDOW_SIZE, procedure_code)
         dataloader = DataLoader(dataset, batch_size=config.BATCH_SIZE, shuffle=False)
 
-         # Criando o modelo
+        try:
+            for i, (x, _, _) in enumerate(dataloader):
+                if torch.isnan(x).any():
+                    print(f"NaN encontrado em batch {i + 1}")
+                if torch.isinf(x).any():
+                    print(f"Inf encontrado em batch {i + 1}")
+                if x.shape[0] != config.BATCH_SIZE:
+                    print(f"Batch {i + 1} com tamanho inválido: {x.shape[0]}")
+                if x.size(0) != config.BATCH_SIZE:
+                    print(f"Batch {i} com tamanho inválido: {x.size(0)}")
+                continue
+        except Exception as e:
+            print("Ocorreu uma exceção:", str(e))
+
+        # Criando o modelo
         model = LSTMAutoencoder(config.INPUT_DIM, config.HIDDEN_DIM, config.NUM_LAYERS, config.isCuda)
 
         if config.isCuda:
@@ -45,27 +54,27 @@ def main():
 
         # Treinando o modelo
         for epoch in range(config.NUM_EPOCHS):
-            for i, (x, y, meta_info) in enumerate(dataloader):
+            for i, (x, _, _) in enumerate(dataloader):
                 if config.isCuda:
                     x = x.cuda()
-                    y = y.cuda()
-                
+
                 # Ver o head do tensor de entrada
-                print(f"Input tensor at epoch {epoch  + 1}, batch {i + 1}:\n", x[0], "\n")
+                print(f"Input tensor at epoch {epoch + 1}, batch {i + 1}:\n", x[0], "\n")
                 print("Shape of x:", x.shape)
+
                 # Forward pass
                 outputs = model(x)
-                loss = criterion(outputs, y)
+                outputs = outputs.view(-1, config.WINDOW_SIZE, config.INPUT_DIM)  # Redimensionar para corresponder a x
+                loss = criterion(outputs, x)  # Comparando a saída com os dados de entrada originais
 
-                # Backward and optimize
+                # Backward e otimização
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
 
             print(f'Epoch [{epoch+1}/{config.NUM_EPOCHS}], Loss: {loss.item():.4f}')
 
-        print(f"Modelo para o procedimento {procedure_code} treinado com sucesso!")
-
+        print("Treinamento concluído com sucesso!")
 
 if __name__ == '__main__':
     main()
