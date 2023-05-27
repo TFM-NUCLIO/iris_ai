@@ -1,19 +1,16 @@
-# start by pulling the python image
-FROM python:3.8-alpine
+FROM python:3.10-slim-buster
 
-# copy the requirements file into the image
-COPY ./requirements.txt /app/requirements.txt
-
-# switch working directory
 WORKDIR /app
 
-# install the dependencies and packages in the requirements file
-RUN pip install -r requirements.txt
+COPY requirements.txt requirements.txt
 
-# copy every content from the local file to the image
-COPY . /app
+RUN apt-get update && apt-get install -y libpq-dev gcc g++ make swig git
+RUN pip install --upgrade pip
 
-# configure the container to run in an executed manner
+RUN python -m pip install -r requirements.txt
+
+COPY . .
+
 ENTRYPOINT [ "python" ]
 
 CMD ["src/main.py" ]

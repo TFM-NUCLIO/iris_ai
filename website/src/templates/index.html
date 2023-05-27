@@ -6,6 +6,7 @@
     <title>Iris</title>
 	<link rel="icon" type="image/x-icon" href="./static/images/favicon.ico">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	
 </head>
 <body>
@@ -32,7 +33,24 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-			<object data="../static/files/frame_1.html"></object>
+			<div class="card md-5">
+				<div class="card-body">
+					<h1 class="mb-5">Populações dos Municípios</h1>
+					<select class="col-md-4 select-mun" id="select-mun"></select>
+					<div class="frame-mun"></div>
+				</div>
+			</div>
+			<br/>
+			<div class="card md-5">
+				<div class="card-body">
+					<h1 class="mb-5">Procedimentos por Municípios</h1>
+					<select class="col-md-4 select-mun select-mun-proc" id="select-mun-proc"></select>
+					<select class="col-md-4 select-proc" id="select-proc"></select>
+					<div class="frame-proc"></div>
+				</div>
+			</div>	
+			
+			<!--<object data="../static/files/frame_1.html"></object>
 			
 			<form action="/calculate" method="post">
 				<div class="form-row">
@@ -47,7 +65,7 @@
 					</div>
 				</div>
 				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+			</form>-->
         </main>
     </div>
 
@@ -56,7 +74,74 @@
             &copy; 2023 - Iris
         </div>
     </footer>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js" integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			
+			$('.select-mun').select2({
+				placeholder: 'Select an option',
+				width: 'resolve',
+				ajax: {
+					url: '/mun',
+					data: function (params) {
+						var query = {
+							search: params.term
+						}
+						return query;
+					},
+					dataType: 'json',
+					cache: true,
+					processResults: function (data) {
+					  return {
+						results: data.map(c => ({ id: c.codigo, text: c.codigo + " - " + c.nome }))
+					  };
+					}
+				}
+			});
+			
+			$('.select-proc').select2({
+				placeholder: 'Select an option',
+				width: 'resolve',
+				ajax: {
+					url: '/proc',
+					data: function (params) {
+						var query = {
+							mun: $('.select-mun-proc').val(),
+							search: params.term
+						}
+						return query;
+					},
+					dataType: 'json',
+					cache: true,
+					processResults: function (data) {
+					  return {
+						results: data.map(c => ({ id: c.codigo_procedimento, text: c.codigo_procedimento + " - " + c.procedimento }))
+					  };
+					}
+				}
+			});
+			
+			$("#select-mun").change(function(option){
+				$.get("/pop/" + $("#select-mun").val(), function(data){
+					$(".frame-mun").html(data);
+				});
+			});
+			
+			$("#select-mun-proc").change(function(option){
+				$("#select-proc").val(null).trigger('change');
+			});
+			
+			$("#select-proc").change(function(option){
+				if($(this).val() == null)
+					return;
+			
+				$.get("/procmun?mun=" + $("#select-mun-proc").val() +"&proc=" + $(this).val(), function(data){
+					$(".frame-proc").html(data);
+				});
+			});
+		});
+	</script>
 </body>
 </html>
